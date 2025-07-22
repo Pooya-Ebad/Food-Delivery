@@ -1,4 +1,4 @@
-import {ApiProperty} from "@nestjs/swagger";
+import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
 import {IsEmail, IsIdentityCard, IsMobilePhone, Length} from "class-validator";
 
 export class SupplierSignupDto {
@@ -18,7 +18,7 @@ export class SupplierSignupDto {
   @ApiProperty()
   @IsMobilePhone("fa-IR", {}, {message: "mobile number is invalid"})
   phone: string;
-  @ApiProperty()
+  @ApiPropertyOptional()
   invite_code: string;
 }
 

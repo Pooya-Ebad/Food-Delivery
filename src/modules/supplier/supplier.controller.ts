@@ -27,15 +27,18 @@ export class SupplierController {
     return this.supplierService.sendOtp(otpDto);
   }
   @Post("/signup")
+  @ApiConsumes(FormType.Urlencoded)
   signup(@Body() supplierDto: SupplierSignupDto) {
     return this.supplierService.signup(supplierDto);
   }
   @Post("/check-otp")
+  @ApiConsumes(FormType.Urlencoded)
   checkOtp(@Body() SendOtpDto: CheckOtpDto) {
     return this.supplierService.checkOtp(SendOtpDto);
   }
   @Post("/supplementary-information")
   @SupplierAuth()
+  @ApiConsumes(FormType.Urlencoded)
   supplementaryInformation(@Body() infoDto: SupplementaryInformationDto) {
     return this.supplierService.saveSupplementaryInformation(infoDto);
   }

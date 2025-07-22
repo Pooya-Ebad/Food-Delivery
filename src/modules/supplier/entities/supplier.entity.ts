@@ -39,7 +39,7 @@ export class SupplierEntity {
   document: string;
   @Column()
   city: string;
-  @Column()
+  @Column({nullable: true})
   invite_code: string;
   @Column({nullable: true, default: SupplierStatus.Registered})
   status: string;
