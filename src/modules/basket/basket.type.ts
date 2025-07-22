@@ -1,3 +1,5 @@
+import { UserEntity } from "../user/entity/user.entity";
+
 export type FoodItemsInBasket = {
   foodId: number;
   name: string;
@@ -19,4 +21,5 @@ export type BasketType = {
   total_discount_amount: number;
   foodList: FoodItemsInBasket[];
   generalDiscountDetail: any;
+  user: any;
 };

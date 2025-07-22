@@ -91,18 +91,13 @@ export class BasketService {
         }
       },
       where: {
-        userId,
+        userId
       },
     });
-
-    const foods = basketItems.filter((item) => item.foodId);
-    basketItems.values()
-    for(const item of basketItems) {
-      item.user.email
-      return {
-      
-      }  
+    if(basketItems.length === 0){
+      throw new NotFoundException("your basket is empty")
     }
+    const foods = basketItems.filter((item) => item.foodId);
     const supplierDiscounts = basketItems.filter(
       (item) => item?.discount?.supplierId
     );
@@ -191,7 +186,7 @@ export class BasketService {
       total_discount_amount,
       foodList,
       generalDiscountDetail,
-      user : user.
+      user : basketItems[0].user
     };
   }
 
