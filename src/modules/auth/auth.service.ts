@@ -1,7 +1,10 @@
 import {
   BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
+  NotFoundException,
+  Scope,
   UnauthorizedException,
 } from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
@@ -12,24 +15,45 @@ import {CheckOtpDto, SendOtpDto} from "./dto/otp.dto";
 import {randomInt} from "crypto";
 import {JwtService} from "@nestjs/jwt";
 import {PayloadType} from "./types/payload";
-@Injectable()
+import { SignupDto, UserAddressDto } from "./dto/basic.dto";
+import { UserAddressEntity } from "../user/entity/address.entity";
+import { Request } from "express";
+import { REQUEST } from "@nestjs/core";
+@Injectable({scope : Scope.REQUEST})
 export class AuthService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
-
     @InjectRepository(OTPEntity) private otpRepository: Repository<OTPEntity>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    @InjectRepository(UserAddressEntity) private addressRepository: Repository<UserAddressEntity>,
+    @Inject(REQUEST)
+    private req : Request
   ) {}
 
+  async create(signupDto : SignupDto){
+    const { email, first_name, last_name, mobile } = signupDto
+    await this.checkEmail(email)
+    await this.checkMobile(mobile)
+    const user = this.userRepository.create({
+      first_name,
+      last_name,
+      email,
+      mobile
+    })
+    await this.userRepository.save(user)
+    await this.createOtpForUser(user)
+    return {
+      message: "sent code successfully"
+    };
+  }
   async sendOtp(otpDto: SendOtpDto) {
     const {mobile} = otpDto;
     let user = await this.userRepository.findOneBy({mobile});
     if (!user) {
-      user = this.userRepository.create({
-        mobile,
-      });
-      user = await this.userRepository.save(user);
+      return {
+        message : "user not found, please signup first"
+      }
     }
     await this.createOtpForUser(user);
     return {
@@ -76,6 +100,27 @@ export class AuthService {
   async checkMobile(mobile: string) {
     const user = await this.userRepository.findOneBy({mobile});
     if (user) throw new ConflictException("mobile number is already exist");
+  }
+  async setAddress(addressDto : UserAddressDto){
+    const { id } = this.req.user
+    const { title, city, province, address, postal_code } = addressDto
+    const user = await this.userRepository.findOneBy({id})
+    const addressExist = await this.addressRepository.findOneBy({postal_code})
+    if(!user) throw new NotFoundException("user not found")
+    if(addressExist) throw new ConflictException("this Postalcode already exist")
+    const new_address = this.addressRepository.create({
+      title,
+      city,
+      postal_code,
+      province,
+      address,
+      userId : id
+    })
+    await this.addressRepository.save(new_address)
+    return {
+      message : "address added successfully"
+    }
+    
   }
   async createOtpForUser(user: UserEntity) {
     const expiresIn = new Date(new Date().getTime() + 1000 * 60 * 2);
