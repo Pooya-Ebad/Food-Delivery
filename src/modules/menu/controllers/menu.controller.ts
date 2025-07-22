@@ -44,7 +44,7 @@ export class MenuController {
   ) {
     return this.menuService.create(foodDto, image);
   }
-  @Get("/get-menu-by-id/:id")
+  @Get("/get-menu-by-supplierId/:id")
   @SKipAuth()
   findAll(@Param("id", ParseIntPipe) id: number) {
     return this.menuService.findAll(id);
@@ -61,6 +61,13 @@ export class MenuController {
   @ApiConsumes(FormType.Multipart)
   @UseInterceptors(UploadFileS3("image"))
   update(
+    @UploadedFile(
+      new ParseFilePipe(
+        {
+          fileIsRequired : false
+        }
+      )
+    )
     @Param("id", ParseIntPipe) id: number,
     @Body() foodDto: UpdateFoodDto,
     @UploadedFile() image: Express.Multer.File
