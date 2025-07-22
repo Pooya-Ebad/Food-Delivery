@@ -10,8 +10,6 @@ import {MenuModule} from "../menu/menu.module";
 import {OrderModule} from "../order/order.module";
 import {PaymentModule} from "../payment/payment.module";
 import {SupplierModule} from "../supplier/supplier.module";
-import {AppController} from "./app.controller";
-import {AppService} from "./app.service";
 
 @Module({
   imports: [
@@ -26,7 +24,7 @@ import {AppService} from "./app.service";
     OrderModule,
     HttpApiModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
