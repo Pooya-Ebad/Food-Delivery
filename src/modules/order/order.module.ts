@@ -10,7 +10,6 @@ import {UserAddressEntity} from "../user/entity/address.entity";
 @Module({
   imports: [
     AuthModule,
-
     TypeOrmModule.forFeature([OrderEntity, OrderItemEntity, UserAddressEntity]),
   ],
   providers: [OrderService],

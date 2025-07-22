@@ -31,6 +31,7 @@ export class OrderService {
     const {addressId, description = undefined} = paymentDto;
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
+    await queryRunner.startTransaction();
     try {
       const {id: userId} = this.req.user;
       const address = await this.userAddressRepository.findOneBy({
