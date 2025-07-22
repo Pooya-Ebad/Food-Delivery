@@ -59,11 +59,10 @@ export class MenuService {
       item.image = Location;
       item.key = Key;
     }
-    if (foodDto.name !== undefined) item.name = foodDto.name;
-    if (foodDto.description !== undefined) item.description = foodDto.description;
-    if (foodDto.discount !== undefined) item.discount = foodDto.discount;
-    if (foodDto.price !== undefined) item.price = foodDto.price;
-
+    if (foodDto.name) item.name = foodDto.name;
+    if (foodDto.description) item.description = foodDto.description;
+    if (foodDto.discount) item.discount = foodDto.discount;
+    if (foodDto.price) item.price = +foodDto.price;
     await this.menuRepository.save(item);
     return {
       message: "updated",

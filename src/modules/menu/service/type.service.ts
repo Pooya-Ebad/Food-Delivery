@@ -54,7 +54,7 @@ export class MenuTypeService {
     if (priority) type.priority = priority;
     await this.typeRepository.save(type);
     return {
-      message: "deleted successfully",
+      message: "updated successfully",
     };
   }
 }
